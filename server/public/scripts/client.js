@@ -27,7 +27,7 @@ function operatorButtonClick(){
     
     //This takes the most recently chosen operator and saves it
     chosenOperator = $(this).attr("id")
-    operatorHighlighter(chosenOperator)
+    /*operatorHighlighter(chosenOperator) This is a personal goal, I'll update this later */
     console.log('The current operator chosen is', chosenOperator);
 
 }
@@ -47,25 +47,41 @@ function enterButtonClick(){
     console.log('Arithmatic to export:', arithmatic);
     
     // This sends all intake info to be shipped out below
-    
+    arithmaticExporter(arithmatic);
 }
 // < // Button Click Handlers  > ---------------------------------------------------------------------------
 
 
 
+
 // <   Input data sent out  > ---------------------------------------------------------------------------
-// function name(params) {
-        
-// }
-
-
+function arithmaticExporter(arithmaticExport) {
+    $.ajax({
+        type: "POST",
+        url:"/export-arithmatic",
+        data: {
+            arithmaticExport
+        }
+    }).then(function(response) {
+        console.log('Confirmation recieved :)' )
+    }).catch(function (response) {
+        console.log('No confirmation recieved :\'(')
+    })
+}
 // < // Input data sent out  > ---------------------------------------------------------------------------
 
 
+
+
+
+
 // <  display handlers  > ---------------------------------------------------------------------------
-function operatorHighlighter(operator) {
-   console.log('Highlight this:', operator);
-}
+
+// This is a personal Goal, I'll update this later
+// function operatorHighlighter(operator) {
+//    console.log('Highlight this:', operator);
+
+// }
 
 // < // display handlers  > ---------------------------------------------------------------------------
 
@@ -78,12 +94,15 @@ function operatorHighlighter(operator) {
 
 
 
+
+
+
 //Things to do
 // * Create addition subtraction multiplication and division inputs
-//---^^^--Done--^^^--------------------------------------------------------------------------
 // * package it up into an object
 // * send package to server
 // * have server take apart data
+//---^^^--Done--^^^--------------------------------------------------------------------------
 // * Calculator logic function to process data
 // * have data stored in a history on server
 // * package up data

@@ -18,6 +18,7 @@
   },
   "homepage": "https://github.com/Joshkmanj/weekend-jquery-server-calculator#readme",
   "dependencies": {
+    "body-parser": "^1.19.1",
     "express": "^4.17.2"
   }
 }
