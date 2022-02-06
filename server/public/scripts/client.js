@@ -17,6 +17,7 @@ function readyNow(){
     // Click listener for CLEAR button
     // $('#button-clear').on('click', clearButtonClick)
     
+    arithmaticImporter()
 }
 //---<//Things to be ready on page-load>-----------------------------------
 
@@ -73,7 +74,7 @@ function arithmaticExporter(arithmaticExport) {
 // < // Input data sent out  > ------------------------------------------------------------------------
 
 // < Import data from server >-------------------------------------------------------------------------
-function arithmaticImporter(response) {
+function arithmaticImporter() {
     $.ajax({
         method: 'GET',
         url: '/answers'
@@ -100,11 +101,17 @@ function emptyInputs (){
 function renderAnswers(array) {
     console.log('rendering answers');
     
-    $('#most-recent-answer').empty()
+    // Emptying old answers
     $('#answer-holder').empty()
-    $('#most-recent-answer').append(`<h3>${array[0].valueOne} ${array[0].operator} ${array[0].valueTwo} = ${array[0].answer}</h3>`)
-    for (let i=1; i<array.length-1; i++) { // The array starts at index=1 so that the most recent answer is displayed
+    $('#most-recent-answer').empty()
+    
+    // Refreshing new answers to page
+    $('#most-recent-answer').append(`${array[0].valueOne} ${array[0].operator} ${array[0].valueTwo} = ${array[0].answer}`)
+   
+    for (let i=1; i<array.length; i++) { // The array starts at index=1 so that the most recent answer is displayed
         $('#answer-holder').append(`<li>${array[i].valueOne} ${array[i].operator} ${array[i].valueTwo} = ${array[i].answer}</li>`)
+        console.log('Appending from array', array[i]);
+        
     }
 }
 
@@ -139,9 +146,9 @@ function renderAnswers(array) {
 // * have data stored in a history on server
 // * package up data
 // * send it back to client
-//---^^^--Done--^^^--------------------------------------------------------------------------
 // * append answer to main display
 // * append history below
+//---^^^--Done--^^^--------------------------------------------------------------------------
 // 
 // Stretch Goals
 // * Make calculator appear like a normal calculator
