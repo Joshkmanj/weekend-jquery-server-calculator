@@ -28,9 +28,15 @@ app.get('/answers',function(req,res) {
 })
 // < // End of GET requests >-------------------------------------------------
 
+// < Delete Requests >-----------------------------------------------------------
+app.delete('/reset',function(req,res) {
+    console.log('request at /reset was made');
+    answerHistory = [];
+    res.sendStatus(200)
+})
+// < // End of Delete Requests >-----------------------------------------------------------
 
 // < arithmatic functions >-------------------------------------------------
-
 function calculator(object){
     let answer;
     let newOperator
@@ -72,7 +78,6 @@ function calculator(object){
 }//end calculator
 // < // arithmatic functions >-------------------------------------------------
 
-// <
 
 
 

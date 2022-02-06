@@ -15,7 +15,7 @@ function readyNow(){
     // Click listener for ENTER button
     $('#button-enter').on('click', enterButtonClick)
     // Click listener for CLEAR button
-    // $('#button-clear').on('click', clearButtonClick)
+    $('#button-clear').on('click', clearHistory)
     
     // It's very important for the client to send a get request to the server to get any
     // answer history and display it on the DOM. Because if the page is ever reloaded
@@ -97,6 +97,7 @@ function arithmaticImporter() {
             console.log('There is no available history data on the server');
             return true
         }
+        emptyAnswers()
         renderAnswers(response)
     }).catch(function(response){
         console.log('Failed to import arithmatic', response);  
@@ -104,30 +105,48 @@ function arithmaticImporter() {
 }
 // < // Import data from server >----------------------------------------------------------------------
 
+// < Delete request to server >----------------------------------------------------------------------
+function clearHistory() {
+    console.log('attempting to clear history');
+    
+    $.ajax({
+        method: 'delete',
+        url: '/reset'
+    }).then(function(response){
+        console.log('History deleted', response);
+        // Remove appended history
+        emptyAnswers()
+    }).catch(function(response){
+        console.log('Failed to delete history', response);  
+    })
+}
+// < // Delete request to server >----------------------------------------------------------------------
 
 
 
 // <  display handlers  > ----------------------------------------------------------------------------
-function emptyInputs (){
+function emptyInputs (){ // This will empty the inputs and reset the chosen operation.
     console.log('emptying inputs');
     
     chosenOperator = undefined;
     $('.input').val('')
 }
-function renderAnswers(array) {
-    console.log('rendering answers');
-    
+function emptyAnswers() { // This will empty the appended history.
     // Emptying old answers
     $('#answer-holder').empty()
-    $('#most-recent-answer').empty()
+    $('#most-recent-answer').empty() 
+}
+
+function renderAnswers(array) { // This will append the history that has been retrieved from the server.
+    console.log('rendering answers');
     
-    // Refreshing new answers to page
+    // Refreshing newest answer to page
     $('#most-recent-answer').append(`${array[0].valueOne} ${array[0].operator} ${array[0].valueTwo} = ${array[0].answer}`)
    
+    // Loops through the array and appends the rest
     for (let i=1; i<array.length; i++) { // The array starts at index=1 so that the most recent answer is displayed
         $('#answer-holder').append(`<li>${array[i].valueOne} ${array[i].operator} ${array[i].valueTwo} = ${array[i].answer}</li>`)
-        console.log('Appending from array', array[i]);
-        
+        // console.log('Appending from array', array[i]); // This was made for testing purposes to ensure all history was displayed
     }
 }
 
