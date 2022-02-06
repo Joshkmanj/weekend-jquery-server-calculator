@@ -17,6 +17,9 @@ function readyNow(){
     // Click listener for CLEAR button
     // $('#button-clear').on('click', clearButtonClick)
     
+    // It's very important for the client to send a get request to the server to get any
+    // answer history and display it on the DOM. Because if the page is ever reloaded
+    // it will ensure the client checks for available data.
     arithmaticImporter()
 }
 //---<//Things to be ready on page-load>-----------------------------------
@@ -42,8 +45,17 @@ function enterButtonClick(){// Enter function collects current inputs and packag
         valueOne: $('.input.one').val(),
         valueTwo: $('.input.two').val(),
     }
+
+    // This checks intake info and prevents improperly filled out fields from being processed
+    if (arithmatic.operator == undefined) {
+        alert(`Please select an operation! * / + -`)
+        return undefined;
+    } else if ( arithmatic.valueOne === '' || arithmatic.valueTwo === '' ){
+        alert(`Check inputs and try again!`)
+        return undefined;
+    }
     
-    // This sends all intake info to be shipped out below
+    // If filter above is passed, this sends all intake info to be shipped out below
     arithmaticExporter(arithmatic);
 
     // This calls a display-handler to reset the inputs
@@ -81,6 +93,10 @@ function arithmaticImporter() {
     }).then(function(response){
         console.log('arithmatic imported, here\'s the response', response);
         // TODO Render stuff to the DOM
+        if (response[0] === undefined ) {
+            console.log('There is no available history data on the server');
+            return true
+        }
         renderAnswers(response)
     }).catch(function(response){
         console.log('Failed to import arithmatic', response);  
@@ -148,11 +164,11 @@ function renderAnswers(array) {
 // * send it back to client
 // * append answer to main display
 // * append history below
-//---^^^--Done--^^^--------------------------------------------------------------------------
 // 
 // Stretch Goals
-// * Make calculator appear like a normal calculator
 // * function won't allow improperly filled input fields, shows an alert
+//---^^^--Done--^^^--------------------------------------------------------------------------
+// * Make calculator appear like a normal calculator
 // * Make a delete request to server to delete history
 // * Allow user to click on something in the history and it'll re-run that
 //
