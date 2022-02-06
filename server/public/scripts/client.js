@@ -1,28 +1,29 @@
 $(document).ready(readyNow)
-console.log('Executing Client JS');
 
-// Current action is the plus/minus/muliply/divide that's most recently decided
-let chosenOperator ;
+//----<Global Variables>---------
+let chosenOperator ; // Current action is the plus/minus/muliply/divide that's most recently decided
+//----</Global Variables>---------
 
+//---< Things to be ready on page-load>-----------------------------------
 function readyNow(){
     console.log('JQuery is ready');
-    
     // Click listeners created for the plus/minus/muliply/divide operators
     $('#button-plus').on('click', operatorButtonClick)
     $('#button-minus').on('click', operatorButtonClick)
     $('#button-multiply').on('click', operatorButtonClick)
-    $('#button-divide').on('click', operatorButtonClick)
-
-    // Click listener for enter button
+    $('#button-divide').on('click', operatorButtonClick)  
+    // Click listener for ENTER button
     $('#button-enter').on('click', enterButtonClick)
+    // Click listener for CLEAR button
+    // $('#button-clear').on('click', clearButtonClick)
+    
 }
+//---<//Things to be ready on page-load>-----------------------------------
 
 
 
 // < Button Click Handlers > --------------------------------------------------------------------------
-
-// Operator function to assign which arithmatic operation is to be used
-function operatorButtonClick(){
+function operatorButtonClick(){// Operator function to assign which arithmatic operation is to be used
     console.log('Operator Button Clicked');
     
     //This takes the most recently chosen operator and saves it
@@ -31,9 +32,7 @@ function operatorButtonClick(){
     console.log('The current operator chosen is', chosenOperator);
 
 }
-
-// Enter function collects current inputs and packages it up
-function enterButtonClick(){
+function enterButtonClick(){// Enter function collects current inputs and packages it up
     console.log('Enter Button Clicked');
     
     // This packs up the inputs into an object named arithmatic
@@ -42,11 +41,12 @@ function enterButtonClick(){
         valueOne: $('.input.one').val(),
         valueTwo: $('.input.two').val(),
     }
-    // Logging intake values for test purposes
-    console.log('Arithmatic to export:', arithmatic);
     
     // This sends all intake info to be shipped out below
     arithmaticExporter(arithmatic);
+
+    // This calls a display-handler to reset the inputs
+    emptyInputs();
 }
 // < // Button Click Handlers  > ----------------------------------------------------------------------
 
@@ -54,6 +54,8 @@ function enterButtonClick(){
 
 // < Input data sent out  > ---------------------------------------------------------------------------
 function arithmaticExporter(arithmaticExport) {
+    console.log('Arithmatic to export:', arithmaticExport);
+
     $.ajax({
         type: "POST",
         url:"/export-arithmatic",
@@ -62,6 +64,8 @@ function arithmaticExporter(arithmaticExport) {
         }
     }).then(function(response) {
         console.log('Confirmation recieved :), now let\'s get some answers' )
+        //After getting confirmation, it'll trigger a GET request to import data
+        arithmaticImporter(response);
     }).catch(function (response) {
         console.log('No confirmation recieved :\'(')
     })
@@ -69,8 +73,17 @@ function arithmaticExporter(arithmaticExport) {
 // < // Input data sent out  > ------------------------------------------------------------------------
 
 // < Import data from server >-------------------------------------------------------------------------
-function arithmaticImporter(params) {
-    
+function arithmaticImporter(response) {
+    $.ajax({
+        method: 'GET',
+        url: '/answers'
+    }).then(function(response){
+        console.log('arithmatic imported, here\'s the response', response);
+        // TODO Render stuff to the DOM
+        renderAnswers(response)
+    }).catch(function(response){
+        console.log('Failed to import arithmatic', response);  
+    })
 }
 // < // Import data from server >----------------------------------------------------------------------
 
@@ -78,6 +91,24 @@ function arithmaticImporter(params) {
 
 
 // <  display handlers  > ----------------------------------------------------------------------------
+function emptyInputs (){
+    console.log('emptying inputs');
+    
+    chosenOperator = undefined;
+    $('.input').val('')
+}
+function renderAnswers(array) {
+    console.log('rendering answers');
+    
+    $('#most-recent-answer').empty()
+    $('#answer-holder').empty()
+    $('#most-recent-answer').append(`<h3>${array[0].valueOne} ${array[0].operator} ${array[0].valueTwo} = ${array[0].answer}</h3>`)
+    for (let i=1; i<array.length-1; i++) { // The array starts at index=1 so that the most recent answer is displayed
+        $('#answer-holder').append(`<li>${array[i].valueOne} ${array[i].operator} ${array[i].valueTwo} = ${array[i].answer}</li>`)
+    }
+}
+
+
 
 // This is a personal Goal, I'll update this later
 // function operatorHighlighter(operator) {
@@ -104,11 +135,11 @@ function arithmaticImporter(params) {
 // * package it up into an object
 // * send package to server
 // * have server take apart data
-//---^^^--Done--^^^--------------------------------------------------------------------------
 // * Calculator logic function to process data
 // * have data stored in a history on server
 // * package up data
 // * send it back to client
+//---^^^--Done--^^^--------------------------------------------------------------------------
 // * append answer to main display
 // * append history below
 // 

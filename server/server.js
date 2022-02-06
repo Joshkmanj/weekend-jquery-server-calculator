@@ -8,7 +8,7 @@ app.use(bodyParser.urlencoded({ extended: true })) //This will make res/req data
 // < // server set-up >-------------------------------------------------
 
 //----<Global Variables>---------
-let history = []
+let answerHistory = []
 //----</Global Variables>---------
 
 // < POST requests >-------------------------------------------------
@@ -24,43 +24,51 @@ app.post('/export-arithmatic', function(req,res){
 // < GET Requests >-----------------------------------------------------------
 app.get('/answers',function(req,res) {
     console.log('request at /answers was made');
-    res.send()
+    res.send(answerHistory)
 })
-
 // < // End of GET requests >-------------------------------------------------
 
 
 // < arithmatic functions >-------------------------------------------------
-// let exampleData= { operator: 'button-divide', valueOne: '10', valueTwo: '5' };
-// console.log('example data:', exampleData);
 
 function calculator(object){
     let answer;
+    let newOperator
     let firstNumber = Number(object.valueOne)
     let secondNumber = Number(object.valueTwo)
-    let operator = object.operator
 
-    switch (operator) {
+    switch (object.operator) {
         case 'button-plus':
             answer=(firstNumber+secondNumber)
+            newOperator='+'
             console.log(firstNumber, '+', secondNumber, "=", answer);
         break;
         case 'button-minus':
             answer=(firstNumber-secondNumber)
+            newOperator='-'
             console.log(firstNumber, '-', secondNumber, "=", answer);
         break;
         case 'button-multiply':
             answer=(firstNumber*secondNumber)
+            newOperator='*'
             console.log(firstNumber, '*', secondNumber, "=", answer);
         break;
         case 'button-divide':
             answer=(firstNumber/secondNumber)
+            newOperator='/'
             console.log(firstNumber, '/', secondNumber, "=", answer);
         break;
         default: console.log('No operator chosen');
         break;
     }//end switch
     console.log('answer is:', answer);
+    let completeArithmatic = {
+        operator: newOperator,
+        valueOne: firstNumber,
+        valueTwo: secondNumber,
+        answer: answer,
+    }
+    answerHistory.unshift(completeArithmatic)
 }//end calculator
 // < // arithmatic functions >-------------------------------------------------
 
