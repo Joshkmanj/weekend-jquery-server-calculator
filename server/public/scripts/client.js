@@ -19,7 +19,7 @@ function readyNow(){
 
 
 
-// < Button Click Handlers > ---------------------------------------------------------------------------
+// < Button Click Handlers > --------------------------------------------------------------------------
 
 // Operator function to assign which arithmatic operation is to be used
 function operatorButtonClick(){
@@ -31,7 +31,6 @@ function operatorButtonClick(){
     console.log('The current operator chosen is', chosenOperator);
 
 }
-
 
 // Enter function collects current inputs and packages it up
 function enterButtonClick(){
@@ -49,12 +48,11 @@ function enterButtonClick(){
     // This sends all intake info to be shipped out below
     arithmaticExporter(arithmatic);
 }
-// < // Button Click Handlers  > ---------------------------------------------------------------------------
+// < // Button Click Handlers  > ----------------------------------------------------------------------
 
 
 
-
-// <   Input data sent out  > ---------------------------------------------------------------------------
+// < Input data sent out  > ---------------------------------------------------------------------------
 function arithmaticExporter(arithmaticExport) {
     $.ajax({
         type: "POST",
@@ -63,19 +61,23 @@ function arithmaticExporter(arithmaticExport) {
             arithmaticExport
         }
     }).then(function(response) {
-        console.log('Confirmation recieved :)' )
+        console.log('Confirmation recieved :), now let\'s get some answers' )
     }).catch(function (response) {
         console.log('No confirmation recieved :\'(')
     })
 }
-// < // Input data sent out  > ---------------------------------------------------------------------------
+// < // Input data sent out  > ------------------------------------------------------------------------
+
+// < Import data from server >-------------------------------------------------------------------------
+function arithmaticImporter(params) {
+    
+}
+// < // Import data from server >----------------------------------------------------------------------
 
 
 
 
-
-
-// <  display handlers  > ---------------------------------------------------------------------------
+// <  display handlers  > ----------------------------------------------------------------------------
 
 // This is a personal Goal, I'll update this later
 // function operatorHighlighter(operator) {
